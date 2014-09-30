@@ -1,0 +1,14 @@
+CACHE MANIFEST
+
+# version 5
+
+index.html
+management.html
+images/icons.png
+scripts/hangman.js
+scripts/management.js
+scripts/jquery-2.1.0.min.js
+scripts/modernizr.hangman.js
+styles/hangman.css
+styles/management.css
+

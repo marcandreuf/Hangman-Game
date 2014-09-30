@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="hangmanGame" default="default" basedir=".">
+    <description>Builds, tests, and package the project hangman game.</description>
+    <import file="nbproject/build-impl.xml"/>
+    
+    <property name="src.dir" location="src/main/java" />
+    <property name="test.dir" location="src/test/java" />
+    <property name="src.build.dir" location="build/classes" />
+    <property name="test.build.dir" location="build/test/classes" />
+    <property name="web.dir" location="src/main/web" />
+    <property name="webinf.dir" location="${web.dir}/WEB-INF" />
+    <property name="webinf.lib.dir" location="${webinf.dir}/lib" />
+    <property name="junit.lib.dir" location="lib" />
+    <property name="test.result.dir" location="build/target" />
+    <property name="dist.dir" location="dist"/>
+    
+    <path id="compile.classpath">
+        <fileset dir="${webinf.lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+    
+    <path id="junit.path.id">
+        <fileset dir="lib">
+            <include name="*.jar" />
+        </fileset>
+        <pathelement location="${src.build.dir}" />
+    </path>
+    
+    <target name="clean">
+        <delete dir="${src.build.dir}" />
+        <delete dir="${test.build.dir}" />
+        <delete dir="${test.result.dir}" />
+        <delete dir="${dist.dir}" />
+    </target>
+    
+    <target name="init.dirs">
+        <mkdir dir="${src.build.dir}" />
+        <mkdir dir="${test.build.dir}" />
+        <mkdir dir="${test.result.dir}" />
+        <mkdir dir="${dist.dir}" />
+    </target>
+    
+    <target name="compile.src" depends="init.dirs" >
+        <javac source="1.7" srcdir="${src.dir}" destdir="${src.build.dir}" includeantruntime="false">
+            <classpath refid="compile.classpath"/>
+        </javac>
+    </target>
+    
+     <target name="compile.test" depends="compile.src" description="Compile Junit test classes">
+        <javac srcdir="${test.dir}" destdir="${test.build.dir}" includeantruntime="false">
+            <classpath>
+                <pathelement location="${src.build.dir}" />
+                <path refid="compile.classpath" />
+                <path refid="junit.path.id" />
+            </classpath>            
+        </javac>
+    </target>
+    
+    <target name="junit" depends="compile.test" description="Runs junit tests only." >
+        <mkdir dir="${test.result.dir}/test-results"/>
+        <junit fork="true" forkmode="perBatch" haltonfailure="false"
+               printsummary="true" dir="${test.result.dir}" failureproperty="test.failed">
+            <classpath>
+                <path refid="compile.classpath" />
+                <path refid="junit.path.id" />
+                <pathelement location="${src.build.dir}"/>
+                <pathelement location="${test.build.dir}"/>
+            </classpath>
+            <formatter type="brief" usefile="false" />
+            <formatter type="plain" />
+            <batchtest todir="${test.result.dir}/test-results">
+                <fileset dir="${test.build.dir}">
+                    <include name="**/*Test.class" />
+                </fileset>
+            </batchtest>
+        </junit>
+        <fail if="test.failed" />
+    </target>
+    
+    
+    <target name="junit-integration" depends="junit" description="Runs all integration tests of REST API." >
+        <mkdir dir="${test.result.dir}/int-test-results"/>
+        <junit fork="true" forkmode="perBatch" haltonfailure="false"
+               printsummary="true" dir="${test.result.dir}" failureproperty="test.failed">
+            <classpath>
+                <path refid="compile.classpath" />
+                <path refid="junit.path.id" />
+                <pathelement location="${src.build.dir}"/>
+                <pathelement location="${test.build.dir}"/>
+            </classpath>
+            <formatter type="brief" usefile="false" />
+            <formatter type="xml" />
+            <batchtest todir="${test.result.dir}/int-test-results">
+                <fileset dir="${test.build.dir}">
+                    <include name="**/*IT.class" />
+                </fileset>
+            </batchtest>
+        </junit>
+        <mkdir dir="${test.result.dir}/int-test-report" />
+        <junitreport todir="${test.result.dir}/int-test-report">
+            <fileset dir="${test.result.dir}/int-test-results">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report format="frames" todir="${test.result.dir}/int-test-report" />
+        </junitreport>
+        <fail if="test.failed" />
+    </target>
+    
+    
+     <target name="war" depends="junit">
+        <war destfile="dist/${ant.project.name}.war" webxml="${webinf.dir}/web.xml">
+            <fileset dir="${web.dir}"/>
+            <lib dir="${webinf.lib.dir}"/>
+            <classes dir="${src.build.dir}"/>
+        </war>
+    </target>
+    
+</project>

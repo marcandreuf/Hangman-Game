@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Management dashboard</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="styles/management.css" rel="stylesheet" type="text/css">
+        <script src="scripts/modernizr.hangman.js"></script>
+        <script>
+            Modernizr.load([{
+                load: ['scripts/jquery-2.1.0.min.js', 'scripts/management.js'],
+                complete: function() {
+                    initManagement();
+                }
+            }]);
+        </script>
+    </head>
+    <body>
+        <div>
+            <table id="gamesTable" style="width: 600px">
+                <thead>
+                    <tr>
+                        <th>Game id</th>
+                        <th>Word to guess</th>
+                        <th>Guesses</th>
+                        <th>State</th>                 
+                    </tr>
+                </thead>                
+            </table>
+        </div>
+        <div>
+            <div id="btnPlaying">Load playing</div> <div id="btnAll">Load all</div>
+        </div>
+        
+    </body>
+</html>

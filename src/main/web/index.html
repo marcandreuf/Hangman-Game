@@ -1,0 +1,62 @@
+<!--
+    Credits: This games is based on the game from David Powers at 
+    http://www.adobe.com/devnet/html5/articles/hangman-part-1.html
+
+    The original game its being extended to add the management dashboard
+    page and the required ajax calls to send updates of the game state
+    to the backend.
+
+-->
+
+<!DOCTYPE HTML>
+<html class="no-js" manifest="hangman.appcache">
+    <head>
+        <meta charset="utf-8">
+        <title>Hangman</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="styles/hangman.css" rel="stylesheet" type="text/css">
+        <!--[if lte IE 8]>
+            <script src="scripts/excanvas.js"></script>
+        <![endif]-->
+        <script src="scripts/modernizr.hangman.js"></script>
+        <script>
+            Modernizr.load([{
+                    test: Modernizr.canvastext,
+                    nope: ['scripts/canvas.text.js', 'scripts/optimer-bold-normal.js']
+                },{
+                test: Modernizr.localstorage,
+                nope: ['scripts/json2.js', 'scripts/storage_polyfill.js'],
+                both: ['scripts/jquery-2.1.0.min.js', 'scripts/hangman.js'],
+                complete: function() {
+                    init();
+                }
+            }]);
+        </script>
+    </head>
+
+    <body>
+        <h1>Hangman</h1>
+        <div id="menu">
+            <a href="management.html">Management dashboard</a>
+        </div>
+        <p id="warning">JavaScript must be enabled to play this game.</p>
+        <div id="help"></div>
+        <div id="helptext">
+            <h2>How to Play</h2>
+            <div id="close"></div>
+            <p>Hangman is a word-guessing game. Click or tap New Game to display
+                the letters of the alphabet and a row of dashes indicating the 
+                number of letters to be guessed. Click or tap a letter. If it's 
+                in the word, it replaces the dash(es). Each wrong guess results 
+                in a stroke being added to a gallows and its victim. Your role 
+                is to guess the word correctly before the victim meets his 
+                grisly fate.</p>
+        </div>
+        <p id="loading">Game loading. . .</p>
+        <canvas id="stage" width="200" height="200">Sorry, your browser needs 
+            to support canvas for this game.</canvas>
+        <div id="play">New Game</div> <div id="clear">Clear Score</div>
+        <p id="word"></p>
+        <div id="letters"></div>
+    </body>
+</html>
